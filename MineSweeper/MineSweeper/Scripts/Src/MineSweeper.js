@@ -5,6 +5,7 @@
 
     function Tile(hasMine) {
         this.HasMine = hasMine || false;
+        this.Neighbours = [];
     }
 
     function setupBoard(boardSize, mineLocations) {
@@ -17,35 +18,35 @@
             } else {
 
                 if (i % boardSize != 0) {
-                    tile.Left = tiles[i - 1];
+                    tile.Neighbours.add(tiles[i - 1]);
                 }
 
                 if (parseInt(i / boardSize) != 0) {
-                    tile.Top = tiles[i - boardSize];
+                    tile.Neighbours.add(tiles[i - boardSize]);
                 }
 
                 if (i % boardSize != (boardSize - 1)) {
-                    tile.Right = tiles[i + 1];
+                    tile.Neighbours.add(tiles[i + 1]);
                 }
 
                 if (parseInt(i / boardSize) <= (boardSize - 1)) {
-                    tile.Bottom = tiles[i + boardSize];
+                    tile.Neighbours.add(tiles[i + boardSize]);
                 }
 
                 if (tile.Top && tile.Left) {
-                    tile.TopLeft = tiles[i - (boardSize + 1)];
+                    tile.Neighbours.add(tiles[i - (boardSize + 1)]);
                 }
 
                 if (tile.Top && tile.Right) {
-                    tile.TopRight = tiles[i - (boardSize - 1)];
+                    tile.Neighbours.add(tiles[i - (boardSize - 1)]);
                 }
 
                 if (tile.Bottom && tile.Left) {
-                    tile.BottomLeft = tiles[i + (boardSize - 1)];
+                    tile.Neighbours.add(tiles[i + (boardSize - 1)]);
                 }
 
                 if (tile.Bottom && tile.Right) {
-                    tile.BottomRight = tiles[i + (boardSize + 1)];
+                    tile.Neighbours.add(tiles[i + (boardSize + 1)]);
                 }
             }
         }
@@ -87,30 +88,14 @@
         if (tile.HasMine)
             return -1;
         var mines = 0;
-        if (tile.Left && tile.Left.HasMine) {
-            mines += 1;
+
+        var neighbourCount = tile.Neighbours.length;
+
+        for (var i = 0; i < neighbourCount; i++) {
+            if (tile.Neighbours[i].HasMine)
+                mines += 1;
         }
-        if (tile.Right && tile.Right.HasMine) {
-            mines += 1;
-        }
-        if (tile.Top && tile.Top.HasMine) {
-            mines += 1;
-        }
-        if (tile.Bottom && tile.Bottom.HasMine) {
-            mines += 1;
-        }
-        if (tile.TopLeft && tile.TopLeft.HasMine) {
-            mines += 1;
-        }
-        if (tile.TopRight && tile.TopRight.HasMine) {
-            mines += 1;
-        }
-        if (tile.BottomLeft && tile.BottomLeft.HasMine) {
-            mines += 1;
-        }
-        if (tile.BottomRight && tile.BottomRight.HasMine) {
-            mines += 1;
-        }
+
         return mines;
     };
 
